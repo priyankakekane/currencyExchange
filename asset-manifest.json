@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/YOUR_REPO_NAME/static/css/main.1d633f3d.css",
-    "main.js": "/YOUR_REPO_NAME/static/js/main.d92a78dd.js",
-    "static/js/453.155dc413.chunk.js": "/YOUR_REPO_NAME/static/js/453.155dc413.chunk.js",
-    "index.html": "/YOUR_REPO_NAME/index.html",
-    "main.1d633f3d.css.map": "/YOUR_REPO_NAME/static/css/main.1d633f3d.css.map",
-    "main.d92a78dd.js.map": "/YOUR_REPO_NAME/static/js/main.d92a78dd.js.map",
-    "453.155dc413.chunk.js.map": "/YOUR_REPO_NAME/static/js/453.155dc413.chunk.js.map"
+    "main.css": "/priyankakekane/currencyExchange.git/static/css/main.1d633f3d.css",
+    "main.js": "/priyankakekane/currencyExchange.git/static/js/main.fa35998e.js",
+    "static/js/453.155dc413.chunk.js": "/priyankakekane/currencyExchange.git/static/js/453.155dc413.chunk.js",
+    "index.html": "/priyankakekane/currencyExchange.git/index.html",
+    "main.1d633f3d.css.map": "/priyankakekane/currencyExchange.git/static/css/main.1d633f3d.css.map",
+    "main.fa35998e.js.map": "/priyankakekane/currencyExchange.git/static/js/main.fa35998e.js.map",
+    "453.155dc413.chunk.js.map": "/priyankakekane/currencyExchange.git/static/js/453.155dc413.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.1d633f3d.css",
-    "static/js/main.d92a78dd.js"
+    "static/js/main.fa35998e.js"
   ]
 }
