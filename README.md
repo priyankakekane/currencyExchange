@@ -1,4 +1,4 @@
-# 💸 Staff Currency Transfer Dashboard
+# 💸 Currency Exchange Dashboard
 
 A robust, React-based internal tool for managing and authorizing currency exchange transactions. This dashboard provides a secure, three-step flow: Quote Generation, Review/Confirmation, and Real-time Status Tracking.
 
