@@ -1,6 +1,7 @@
 import QuoteScreen from './components/QuoteScreen';
 import ConfirmScreen from './components/ConfirmScreen';
 import StatusScreen from './components/StatusScreen';
+import Header from './components/Header';
 import { TransferProvider, useTransfer } from './context/TransferContext';
 
 const styles = {
@@ -38,6 +39,7 @@ const styles = {
     borderRadius: '6px',
     cursor: 'pointer',
     fontWeight: '600',
+    marginTop: '12px',
   },
   buttonDisabled: { backgroundColor: '#ccc' },
   card: { padding: '15px', background: '#f9f9f9', borderRadius: '8px' },
@@ -54,39 +56,43 @@ const styles = {
     transition: 'width 0.5s ease-in-out',
   }),
 };
-const CuurencyExchangeOrchestrator = () => {
+
+const CurencyExchangeOrchestrator = () => {
   const { state, actions, dispatch } = useTransfer();
   return (
-    <div style={styles.container}>
-      {state.error && <div style={{ color: 'red' }}>{state.error}</div>}
+    <section className="App">
+      <Header />
+      <div style={styles.container}>
+        {state.error && <div style={{ color: 'red' }}>{state.error}</div>}
 
-      {state.step === 1 && (
-        <QuoteScreen
-          state={state}
-          dispatch={dispatch}
-          onGetQuote={actions.getQuote}
-          styles={styles}
-        />
-      )}
+        {state.step === 1 && (
+          <QuoteScreen
+            state={state}
+            dispatch={dispatch}
+            onGetQuote={actions.getQuote}
+            styles={styles}
+          />
+        )}
 
-      {state.step === 2 && (
-        <ConfirmScreen
-          state={state}
-          onPay={actions.executePayment}
-          onBack={actions.goBack}
-          styles={styles}
-        />
-      )}
+        {state.step === 2 && (
+          <ConfirmScreen
+            state={state}
+            onPay={actions.executePayment}
+            onBack={actions.goBack}
+            styles={styles}
+          />
+        )}
 
-      {state.step === 3 && <StatusScreen state={state} onReset={actions.reset} styles={styles} />}
-    </div>
+        {state.step === 3 && <StatusScreen state={state} onReset={actions.reset} styles={styles} />}
+      </div>
+    </section>
   );
 };
 
 export default function App() {
   return (
     <TransferProvider>
-      <CuurencyExchangeOrchestrator className="App" />
+      <CurencyExchangeOrchestrator />
     </TransferProvider>
   );
 }

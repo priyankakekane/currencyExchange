@@ -1,3 +1,5 @@
+import * as actions from '../constants/actionTypes';
+
 export const QUOTE_EXPIRY_SECONDS = 30;
 
 export const initialState = {
@@ -16,15 +18,15 @@ export const initialState = {
 
 export default function reducer(state, action) {
   switch (action.type) {
-    case 'BOOTSTRAP':
+    case actions.INITIAL_LOAD:
       return { ...state, currencies: action.payload };
-    case 'START_LOAD':
+    case actions.START_LOAD:
       return { ...state, loading: true, error: null };
-    case 'SET_QUOTE':
+    case actions.SET_QUOTE:
       return { ...state, quote: action.payload, timeLeft: 30, loading: false };
-    case 'UPDATE_TIMER':
+    case actions.UPDATE_TIMER:
       return { ...state, timeLeft: Math.max(0, state.timeLeft - 1) };
-    case 'PAY_SUCCESS':
+    case actions.PAY_SUCCESS:
       return {
         ...state,
         transactionId: action.payload,
@@ -32,17 +34,17 @@ export default function reducer(state, action) {
         step: 3,
         loading: false,
       };
-    case 'SET_STATUS':
+    case actions.SET_STATUS:
       return { ...state, transactionStatus: action.payload };
-    case 'GO_TO_CONFIRM':
+    case actions.GO_TO_CONFIRM:
       return { ...state, step: 2 };
-    case 'GO_BACK':
+    case actions.GO_BACK:
       return { ...state, step: 1, quote: null, timeLeft: 0 };
-    case 'UPDATE_FIELD':
+    case actions.UPDATE_FIELD:
       return { ...state, [action.field]: action.value, quote: null, error: null };
-    case 'ERROR':
+    case actions.ERROR:
       return { ...state, error: action.payload, loading: false };
-    case 'RESET':
+    case actions.RESET:
       return { ...initialState, currencies: state.currencies };
     default:
       return state;

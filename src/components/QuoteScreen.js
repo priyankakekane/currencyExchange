@@ -1,95 +1,128 @@
+import { useMemo } from 'react';
+import * as actions from '../constants/actionTypes';
 import '../App.css';
+
 const QuoteScreen = ({ state, dispatch, onGetQuote, styles }) => {
-  const isExpired = state.timeLeft === 0 && state.quote;
+  const { timeLeft, quote, loading, amount, sourceCurrency, destinationCurrency, currencies } =
+    state;
+
+  const isExpired = useMemo(() => timeLeft === 0 && quote, [timeLeft, quote]);
+  const currencyKeys = useMemo(() => Object.keys(currencies), [currencies]);
+
+  const handleAmountChange = (e) => {
+    const value = e.target.value;
+    if (value === '' || parseFloat(value) >= 0) {
+      dispatch({ type: actions.UPDATE_FIELD, field: 'amount', value });
+    }
+  };
+
+  const handleSwapCurrencies = () => {
+    //Added a swap button between selects for better UX
+    dispatch({ type: actions.UPDATE_FIELD, field: 'sourceCurrency', value: destinationCurrency });
+    dispatch({ type: actions.UPDATE_FIELD, field: 'destinationCurrency', value: sourceCurrency });
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-      <label style={styles.label}>Amount</label>
-      <input
-        type="number"
-        style={styles.input}
-        value={state.amount}
-        onChange={(e) => dispatch({ type: 'UPDATE_FIELD', field: 'amount', value: e.target.value })}
-      />
+      <h3 className="quote-header">Currency Exchange</h3>
 
-      <div style={{ display: 'flex', gap: '10px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+        <label style={styles.label}>Amount to Send</label>
+        <input
+          type="number"
+          min="0"
+          style={styles.input}
+          value={amount}
+          placeholder="0.00"
+          onChange={handleAmountChange}
+        />
+      </div>
+
+      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        {/* Source Currency */}
         <select
           style={styles.select}
-          value={state.sourceCurrency}
+          value={sourceCurrency}
           onChange={(e) =>
-            dispatch({ type: 'UPDATE_FIELD', field: 'sourceCurrency', value: e.target.value })
+            dispatch({ type: actions.UPDATE_FIELD, field: 'sourceCurrency', value: e.target.value })
           }
         >
-          {Object.keys(state.currencies).map((option) => (
-            <option key={option} value={option}>
-              {`${option}[${state.currencies[option].symbol}]`}
-            </option>
+          {currencyKeys.map((code) => (
+            <option key={code} value={code}>{`${code} [${currencies[code].symbol}]`}</option>
           ))}
         </select>
+
+        <button
+          onClick={handleSwapCurrencies}
+          style={{ border: 'none', background: 'none', cursor: 'pointer' }}
+        >
+          ⇄
+        </button>
+
         <select
           style={styles.select}
-          value={state.destinationCurrency}
+          value={destinationCurrency}
           onChange={(e) =>
-            dispatch({ type: 'UPDATE_FIELD', field: 'destinationCurrency', value: e.target.value })
+            dispatch({
+              type: actions.UPDATE_FIELD,
+              field: 'destinationCurrency',
+              value: e.target.value,
+            })
           }
         >
-          {Object.keys(state.currencies).map((option) => (
-            <option key={option} value={option}>
-              {`${option}[${state.currencies[option].symbol}]`}
+          {currencyKeys.map((code) => (
+            <option key={code} value={code} disabled={code === sourceCurrency}>
+              {`${code} [${currencies[code].symbol}]`}
             </option>
           ))}
         </select>
       </div>
 
-      {!state.quote || state.loading ? (
-        <button style={styles.button} onClick={onGetQuote} disabled={state.loading}>
-          {state.loading ? 'Fetching...' : 'Get Quote'}
+      {!quote || loading ? (
+        <button
+          style={styles.button}
+          onClick={onGetQuote}
+          disabled={loading || !amount || amount <= 0}
+        >
+          {loading ? 'Calculating Best Rate...' : 'Get Quote'}
         </button>
       ) : (
-        <div style={styles.card}>
-          <table>
-            <tbody>
-              <tr>
-                <td>Rate :</td>
-                <td>{state.quote.rate}</td>
-              </tr>
-              <tr>
-                <td>Platform Fees :</td>
-                <td>{state.quote.fee}</td>
-              </tr>
-              <tr>
-                <td>Total Payment :</td>
-                <td>{state.quote.total}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div style={{ display: 'flex', gap: '10px' }}>
-            {' '}
-            <button
-              style={{ ...styles.button, ...(isExpired ? styles.buttonDisabled : {}) }}
-              disabled={isExpired}
-              onClick={() => dispatch({ type: 'GO_TO_CONFIRM' })}
-            >
-              Continue{' '}
-              {state.timeLeft > 0 && (
-                <span>
-                  Expiry:{' '}
-                  <span key={state.timeLeft} className="timer-pulse">
-                    {state.timeLeft}s
-                  </span>
-                </span>
-              )}
-            </button>
-            <button
+        <div style={styles.card} className={loading ? 'loading-fade' : ''}>
+          <div style={{ marginBottom: '15px' }}>
+            <div className="rowStyle">
+              <span>Rate</span> <strong>{quote.rate}</strong>
+            </div>
+            <div className="rowStyle">
+              <span>Platform Fees</span> <strong>{quote.fee}</strong>
+            </div>
+            <div
+              className="rowStyle"
               style={{
-                ...styles.invertButton,
+                borderTop: '1px solid #eee',
+                paddingTop: '8px',
+                marginTop: '8px',
               }}
-              onClick={onGetQuote}
             >
-              Refresh Quote
-            </button>
+              <span>Total Payment</span> <strong>{quote.total}</strong>
+            </div>
           </div>
+
+          <button
+            style={{ ...styles.button, ...(isExpired ? styles.buttonDisabled : {}) }}
+            disabled={isExpired}
+            onClick={() => dispatch({ type: actions.GO_TO_CONFIRM })}
+          >
+            {isExpired ? 'Quote Expired' : 'Continue to Transfer'}
+            {!isExpired && timeLeft > 0 && (
+              <span style={{ marginLeft: '8px', opacity: 0.8, fontSize: '12px' }}>
+                ({timeLeft}s)
+              </span>
+            )}
+          </button>
+
+          <button style={styles.invertButton} onClick={onGetQuote}>
+            Refresh Quote
+          </button>
         </div>
       )}
     </div>
