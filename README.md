@@ -7,7 +7,7 @@ A robust, React-based internal tool for managing and authorizing currency exchan
 - **Real-time Quotes:** Fetches live exchange rates with a 30-second expiry timer.
 - **State Management:** Built with the React Context API and `useReducer` for predictable state transitions (Redux-lite pattern).
 - **Polling Engine:** Automatically tracks transaction status from `Processing` to `Settled` using a custom interval hook.
-- **Responsive UI:** Optimized for desktop and tablet use by staff in the field.
+- **Responsive UI:** Optimized for desktop and tablet use.
 
 ## 🛠️ Tech Stack
 
