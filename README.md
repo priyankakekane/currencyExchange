@@ -36,13 +36,7 @@ cd project-name
 
 # Install dependencies
 npm install
-```
 
 # Run Locally
-
 npm start
-
-```
-
-
 ```
